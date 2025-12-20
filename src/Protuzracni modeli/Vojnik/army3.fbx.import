@@ -1,0 +1,52 @@
+[remap]
+
+importer="scene"
+importer_version=1
+type="PackedScene"
+uid="uid://dcc5p4knam4ox"
+path="res://.godot/imported/army3.fbx-117b69d0157e9898e7f376151ad48b5e.scn"
+
+[deps]
+
+source_file="res://Protuzracni modeli/Vojnik/army3.fbx"
+dest_files=["res://.godot/imported/army3.fbx-117b69d0157e9898e7f376151ad48b5e.scn"]
+
+[params]
+
+nodes/root_type=""
+nodes/root_name=""
+nodes/root_script=null
+nodes/apply_root_scale=true
+nodes/root_scale=1.0
+nodes/import_as_skeleton_bones=false
+nodes/use_name_suffixes=true
+nodes/use_node_type_suffixes=true
+meshes/ensure_tangents=true
+meshes/generate_lods=true
+meshes/create_shadow_meshes=true
+meshes/light_baking=1
+meshes/lightmap_texel_size=0.2
+meshes/force_disable_compression=false
+skins/use_named_skins=true
+animation/import=true
+animation/fps=30
+animation/trimming=true
+animation/remove_immutable_tracks=true
+animation/import_rest_as_RESET=false
+import_script/path=""
+materials/extract=0
+materials/extract_format=0
+materials/extract_path=""
+_subresources={
+"nodes": {
+"PATH:Skeleton3D": {
+"retarget/bone_map": Object(BoneMap,"resource_local_to_scene":false,"resource_name":"","profile":Object(SkeletonProfileHumanoid,"resource_local_to_scene":false,"resource_name":"","root_bone":&"Root","scale_base_bone":&"Hips","group_size":4,"bone_size":56,"script":null)
+,"bonemap":null,"bone_map/Root":&"","bone_map/Hips":&"mott_var01_Hips","bone_map/Spine":&"mott_var01_Spine","bone_map/Chest":&"mott_var01_Spine1","bone_map/UpperChest":&"mott_var01_Spine2","bone_map/Neck":&"mott_var01_Neck","bone_map/Head":&"mott_var01_Head","bone_map/LeftEye":&"","bone_map/RightEye":&"","bone_map/Jaw":&"","bone_map/LeftShoulder":&"mott_var01_LeftShoulder","bone_map/LeftUpperArm":&"mott_var01_LeftArm","bone_map/LeftLowerArm":&"mott_var01_LeftForeArm","bone_map/LeftHand":&"mott_var01_LeftHand","bone_map/LeftThumbMetacarpal":&"mott_var01_LeftHandThumb1","bone_map/LeftThumbProximal":&"mott_var01_LeftHandThumb2","bone_map/LeftThumbDistal":&"mott_var01_LeftHandThumb3","bone_map/LeftIndexProximal":&"mott_var01_LeftHandIndex1","bone_map/LeftIndexIntermediate":&"mott_var01_LeftHandIndex2","bone_map/LeftIndexDistal":&"mott_var01_LeftHandIndex3","bone_map/LeftMiddleProximal":&"mott_var01_LeftHandMiddle1","bone_map/LeftMiddleIntermediate":&"mott_var01_LeftHandMiddle2","bone_map/LeftMiddleDistal":&"mott_var01_LeftHandMiddle3","bone_map/LeftRingProximal":&"mott_var01_LeftHandRing1","bone_map/LeftRingIntermediate":&"mott_var01_LeftHandRing2","bone_map/LeftRingDistal":&"mott_var01_LeftHandRing3","bone_map/LeftLittleProximal":&"mott_var01_LeftHandPinky1","bone_map/LeftLittleIntermediate":&"mott_var01_LeftHandPinky2","bone_map/LeftLittleDistal":&"mott_var01_LeftHandPinky3","bone_map/RightShoulder":&"mott_var01_RightShoulder","bone_map/RightUpperArm":&"mott_var01_RightArm","bone_map/RightLowerArm":&"mott_var01_RightForeArm","bone_map/RightHand":&"mott_var01_RightHand","bone_map/RightThumbMetacarpal":&"mott_var01_RightHandThumb1","bone_map/RightThumbProximal":&"mott_var01_RightHandThumb2","bone_map/RightThumbDistal":&"mott_var01_RightHandThumb3","bone_map/RightIndexProximal":&"mott_var01_RightHandIndex1","bone_map/RightIndexIntermediate":&"mott_var01_RightHandIndex2","bone_map/RightIndexDistal":&"mott_var01_RightHandIndex3","bone_map/RightMiddleProximal":&"mott_var01_RightHandMiddle1","bone_map/RightMiddleIntermediate":&"mott_var01_RightHandMiddle2","bone_map/RightMiddleDistal":&"mott_var01_RightHandMiddle3","bone_map/RightRingProximal":&"mott_var01_RightHandRing1","bone_map/RightRingIntermediate":&"mott_var01_RightHandRing2","bone_map/RightRingDistal":&"mott_var01_RightHandRing3","bone_map/RightLittleProximal":&"mott_var01_RightHandPinky1","bone_map/RightLittleIntermediate":&"mott_var01_RightHandPinky2","bone_map/RightLittleDistal":&"mott_var01_RightHandPinky3","bone_map/LeftUpperLeg":&"mott_var01_LeftUpLeg","bone_map/LeftLowerLeg":&"mott_var01_LeftLeg","bone_map/LeftFoot":&"mott_var01_LeftFoot","bone_map/LeftToes":&"mott_var01_LeftToeBase","bone_map/RightUpperLeg":&"mott_var01_RightUpLeg","bone_map/RightLowerLeg":&"mott_var01_RightLeg","bone_map/RightFoot":&"mott_var01_RightFoot","bone_map/RightToes":&"mott_var01_RightToeBase","script":null)
+
+}
+}
+}
+fbx/importer=0
+fbx/allow_geometry_helper_nodes=false
+fbx/embedded_image_handling=1
+fbx/naming_version=2

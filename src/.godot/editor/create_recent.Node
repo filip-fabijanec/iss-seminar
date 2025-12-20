@@ -1,0 +1,8 @@
+AnimationPlayer
+AnimationTree
+Camera3D
+SpringArm3D
+HTerrain
+CollisionShape3D
+MeshInstance3D
+CharacterBody3D
