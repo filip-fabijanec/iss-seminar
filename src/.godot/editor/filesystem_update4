@@ -1,8 +1,4 @@
 res://node_3d.tscn
 res://node_3d.gdshader
 res://player.gd
-res://terrain_data/height.res
-res://terrain_data/data.hterrain
-res://Protuzracni modeli/Vojnik/animacije/walk_forward.res
-res://Protuzracni modeli/Vojnik/animacije/res/walk_right.res
-res://Protuzracni modeli/Vojnik/animacije/res/walk_backward.res
+res://Protuzracni modeli/Vojnik/glava.tres

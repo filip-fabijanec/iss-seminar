@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://dmbu6i8xb3osn"]
+
+[ext_resource type="PackedScene" uid="uid://cpji3t0lnwy6j" path="res://Protuzracni modeli/RPG/rpg-7_animations.glb" id="1_2h5qi"]
+
+[node name="Sketchfab_Scene" instance=ExtResource("1_2h5qi")]
+
+[node name="head_010" parent="Sketchfab_model/RPG_7_fbx/Object_2/RootNode/SK_Mannequin_Arms_001/root/Object_11/GeneralSkeleton" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.014150513, 1.517707, 0.17038448)
+
+[node name="Object_181" parent="Sketchfab_model/RPG_7_fbx/Object_2/RootNode/SK_Mannequin_Arms_001/root/Object_11/GeneralSkeleton" index="1"]
+visible = false
+
+[node name="Object_182" parent="Sketchfab_model/RPG_7_fbx/Object_2/RootNode/SK_Mannequin_Arms_001/root/Object_11/GeneralSkeleton" index="2"]
+visible = false
