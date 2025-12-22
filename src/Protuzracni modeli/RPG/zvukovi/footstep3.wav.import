@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bp26kjoqjfb3r"
+path="res://.godot/imported/footstep3.wav-c6b542b6eac8e5225d61b7b1ab4562ac.sample"
+
+[deps]
+
+source_file="res://Protuzracni modeli/RPG/zvukovi/footstep3.wav"
+dest_files=["res://.godot/imported/footstep3.wav-c6b542b6eac8e5225d61b7b1ab4562ac.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

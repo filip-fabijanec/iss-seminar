@@ -1,0 +1,10 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://dq20meil27ag2"]
+
+[ext_resource type="Texture2D" uid="uid://dhfe65rmgrloy" path="res://Protuzracni modeli/Vojnik/army3_2.png" id="1_1ckvo"]
+
+[resource]
+resource_name = "lambert3"
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.9063318, 0.9063318, 0.9063318, 0.8)
+albedo_texture = ExtResource("1_1ckvo")
+emission_enabled = true

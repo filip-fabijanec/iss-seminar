@@ -1,4 +1,6 @@
 res://node_3d.tscn
 res://node_3d.gdshader
 res://player.gd
-res://Protuzracni modeli/Vojnik/glava.tres
+res://Protuzracni modeli/RPG/ruke.tres
+res://Protuzracni modeli/RPG/animacije/rpg_idle.res
+res://Protuzracni modeli/RPG/animacije/rpg_shoot.res
