@@ -1,0 +1,26 @@
+[gd_scene load_steps=6 format=3 uid="uid://b2tki4sw0uapd"]
+
+[ext_resource type="Script" uid="uid://fgnm6ax04v4v" path="res://eksplozija.gd" id="1_s3j0u"]
+[ext_resource type="AudioStream" uid="uid://bk5w88b52wnwd" path="res://Protuzracni modeli/RPG/zvukovi/explosion.wav" id="2_sq5pf"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_s3j0u"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s3j0u"]
+albedo_color = Color(0.96109337, 0.4917922, 0.016264344, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_tyon7"]
+material = SubResource("StandardMaterial3D_s3j0u")
+
+[node name="Eksplozija" type="Node3D"]
+script = ExtResource("1_s3j0u")
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+emitting = false
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_s3j0u")
+draw_pass_1 = SubResource("SphereMesh_tyon7")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("2_sq5pf")
+volume_db = 20.0

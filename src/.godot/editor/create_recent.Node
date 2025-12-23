@@ -1,7 +1,11 @@
-OmniLight3D
-GPUParticles3D
-Marker3D
+RayCast3D
+MeshInstance3D
+CollisionShape3D
+Area3D
 AudioStreamPlayer3D
+GPUParticles3D
+OmniLight3D
+Marker3D
 Node3D
 BoneAttachment3D
 AnimationPlayer
@@ -9,6 +13,3 @@ AnimationTree
 Camera3D
 SpringArm3D
 HTerrain
-CollisionShape3D
-MeshInstance3D
-CharacterBody3D

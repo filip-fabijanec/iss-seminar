@@ -1,0 +1,50 @@
+[gd_scene load_steps=5 format=3 uid="uid://df6dm0nvn8sun"]
+
+[ext_resource type="Script" uid="uid://dwog3q7qvufff" path="res://raketa.gd" id="1_e6wpd"]
+[ext_resource type="PackedScene" uid="uid://dmbu6i8xb3osn" path="res://RPG_Oruzje.tscn" id="1_eur81"]
+[ext_resource type="PackedScene" uid="uid://b2tki4sw0uapd" path="res://eksplozija.tscn" id="2_tsc02"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_21pbn"]
+height = 3.182251
+
+[node name="Area3D" type="Area3D"]
+script = ExtResource("1_e6wpd")
+explosion_scene = ExtResource("2_tsc02")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.07, 0, 0, 0, -3.059797e-09, -0.07, 0, 0.07, -3.059797e-09, 0, 0.00610476, -0.19740728)
+shape = SubResource("CapsuleShape3D_21pbn")
+
+[node name="Sketchfab_Scene" parent="." instance=ExtResource("1_eur81")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, -0.11290103, -1.4336388, 0.62075126)
+
+[node name="Viewer_Cube" parent="Sketchfab_Scene/Sketchfab_model/RPG_7_fbx/Object_2/RootNode" index="1"]
+visible = false
+
+[node name="head_010" parent="Sketchfab_Scene/Sketchfab_model/RPG_7_fbx/Object_2/RootNode/SK_Mannequin_Arms_001/root/Object_11/Skeleton3D" index="0"]
+visible = false
+
+[node name="Camera" parent="Sketchfab_Scene/Sketchfab_model/RPG_7_fbx/Object_2/RootNode/SK_Mannequin_Arms_001/root/Object_11/Skeleton3D/head_010" index="0"]
+visible = false
+
+[node name="Object_23" parent="Sketchfab_Scene/Sketchfab_model/RPG_7_fbx/Object_2/RootNode/SK_Mannequin_Arms_001/root/Object_11/Skeleton3D/head_010/Camera" index="0"]
+visible = false
+
+[node name="Object_181" parent="Sketchfab_Scene/Sketchfab_model/RPG_7_fbx/Object_2/RootNode/SK_Mannequin_Arms_001/root/Object_11/Skeleton3D" index="1"]
+visible = false
+
+[node name="Object_182" parent="Sketchfab_Scene/Sketchfab_model/RPG_7_fbx/Object_2/RootNode/SK_Mannequin_Arms_001/root/Object_11/Skeleton3D" index="2"]
+visible = false
+
+[node name="Object_184" parent="Sketchfab_Scene/Sketchfab_model/RPG_7_fbx/Object_2/RootNode/SK_Mannequin_Arms_001/root/Object_11/Skeleton3D" index="3"]
+visible = false
+
+[node name="Object_180" parent="Sketchfab_Scene/Sketchfab_model/RPG_7_fbx/Object_2/RootNode/SK_Mannequin_Arms_001/root/Object_11" index="1"]
+visible = false
+
+[node name="Object_183" parent="Sketchfab_Scene/Sketchfab_model/RPG_7_fbx/Object_2/RootNode/SK_Mannequin_Arms_001/root/Object_11" index="2"]
+visible = false
+
+[node name="RayCast3D" type="RayCast3D" parent="."]
+
+[editable path="Sketchfab_Scene"]

@@ -1,6 +1,8 @@
 res://node_3d.tscn
 res://node_3d.gdshader
+res://eksplozija.tscn
+res://eksplozija.gd
+res://Raketa.tscn
+res://raketa.gd
 res://player.gd
-res://Protuzracni modeli/RPG/ruke.tres
-res://Protuzracni modeli/RPG/animacije/rpg_idle.res
-res://Protuzracni modeli/RPG/animacije/rpg_shoot.res
+res://RPG_Oruzje.tscn

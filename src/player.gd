@@ -8,8 +8,6 @@ const ANIMATION_SMOOTHING = 10.0
 # --- KONFIGURACIJA ZVUKA KORAKA ---
 const STEP_INTERVAL = 0.5 
 var step_timer = 0.0
-
-# --- LISTA ZVUKOVA KORAKA ---
 @export var footstep_sounds: Array[AudioStream] 
 
 # --- KONFIGURACIJA KAMERE & CILJANJA ---
@@ -30,6 +28,10 @@ var x_rotacija = 0.0
 var is_reloading = false
 var is_weapon_empty = false 
 
+# --- KONFIGURACIJA PROJEKTILA (RAKETE) ---
+@export var projectile_scene: PackedScene 
+@export var visual_rocket_mesh: Node3D # <--- OBAVEZNO OVO DODIJELI U INSPECTORU!
+
 # --- REFERENCE ---
 @onready var camera_pivot_node = $vojnik/Rotation
 @onready var spring_arm = $vojnik/Rotation/SpringArm3D
@@ -38,16 +40,18 @@ var is_weapon_empty = false
 @onready var skeleton = $vojnik/GeneralSkeleton
 @onready var ruku_pivot = $vojnik/GeneralSkeleton/Leda/RukePivot
 
+# --- TOČKA STVARANJA RAKETE ---
+@onready var spawn_point = $vojnik/GeneralSkeleton/Leda/RukePivot/Ruke/MuzzlePoint 
+
 # --- AUDIO REFERENCE ---
 @onready var audio_shoot = $ZvukPucanja
 @onready var audio_reload = $ZvukReload
 @onready var audio_walk = $ZvukKoraci
 
-# --- NOVO: VIZUALNI EFEKTI (SAMO SVJETLO) ---
-# Ovdje dodijeli OmniLight3D (MuzzleLight) u Inspectoru
+# --- VIZUALNI EFEKTI ---
 @export var muzzle_light: OmniLight3D
 
-# --- ANIMACIJE RUKU ---
+# --- ANIMACIJE ---
 @export var rpg_animation_player: AnimationPlayer 
 
 # IMENA ANIMACIJA
@@ -69,11 +73,14 @@ func _ready():
 	spring_arm.rotation = Vector3.ZERO
 	x_rotacija = 0.0
 	
-	# Osiguraj da je svjetlo isključeno na početku
 	if muzzle_light:
 		muzzle_light.visible = false
 	
 	sakrij_originalne_ruke()
+	
+	# Na početku igre raketa mora biti vidljiva na oružju
+	if visual_rocket_mesh:
+		visual_rocket_mesh.visible = true
 	
 	if rpg_animation_player:
 		rpg_animation_player.play(anim_name_idle)
@@ -99,7 +106,6 @@ func _physics_process(delta):
 		velocity.x = direction.x * SPEED
 		velocity.z = direction.z * SPEED
 		
-		# --- LOGIKA ZA ZVUK HODANJA ---
 		if is_on_floor():
 			step_timer += delta
 			if step_timer > STEP_INTERVAL:
@@ -131,15 +137,11 @@ func _physics_process(delta):
 
 # --- FUNKCIJA ZA KORAKE ---
 func play_footstep():
-	if footstep_sounds.is_empty():
-		return
-
+	if footstep_sounds.is_empty(): return
 	var random_sound = footstep_sounds.pick_random()
 	audio_walk.stream = random_sound
-	
 	audio_walk.pitch_scale = randf_range(0.9, 1.1)
 	audio_walk.volume_db = randf_range(-2.0, 2.0)
-	
 	audio_walk.play()
 
 func aim_logic(delta):
@@ -186,19 +188,20 @@ func handle_weapon_input():
 	if Input.is_action_pressed("shoot"):
 		if not is_weapon_empty:
 			perform_shoot()
-		else:
-			pass
 
 func start_reload():
 	if not rpg_animation_player: return
 	if not is_weapon_empty: return 
 
 	is_reloading = true
-	
+	if visual_rocket_mesh:
+		visual_rocket_mesh.visible = true
 	audio_reload.play()
 	rpg_animation_player.play(anim_name_reload)
 	
 	var anim_length = rpg_animation_player.get_animation(anim_name_reload).length
+	
+	# Čekamo da animacija završi
 	await get_tree().create_timer(anim_length).timeout
 	
 	is_reloading = false
@@ -214,27 +217,37 @@ func perform_shoot():
 
 	is_weapon_empty = true 
 	
-	# 1. ZVUK
+	if visual_rocket_mesh:
+		visual_rocket_mesh.visible = false
+	
 	audio_shoot.pitch_scale = randf_range(0.95, 1.05)
 	audio_shoot.play()
 	
-	# 2. VIZUALNI EFEKT (SAMO LIGHT)
 	trigger_muzzle_flash()
 	
-	# 3. ANIMACIJA
+	if projectile_scene and spawn_point:
+		var rocket = projectile_scene.instantiate()
+		
+		get_tree().root.add_child(rocket)
+		
+		if rocket.is_class("Node3D"):
+			rocket.set_as_top_level(true)
+		
+		# POZICIJA
+		var muzzle_forward = -spawn_point.global_transform.basis.z
+		rocket.global_position = spawn_point.global_position + (muzzle_forward * 0.5)
+		
+		# ROTACIJA - FIX
+		rocket.global_transform.basis = spawn_point.global_transform.basis
+		# Okrećemo raketu za 180 stupnjeva lokalno
+		rocket.rotate_object_local(Vector3.UP, PI)
+		
 	rpg_animation_player.play(anim_name_shoot)
 	rpg_animation_player.queue(anim_name_after_shoot)
 
-	# 4. TRZAJ
-	x_rotacija += 0.5
 
-# --- FUNKCIJA SAMO ZA SVJETLO (BEZ ČESTICA) ---
 func trigger_muzzle_flash():
-	# Bljesak svjetla
 	if muzzle_light:
 		muzzle_light.visible = true
-		
-		# Svjetlo treba trajati jako kratko (npr. 0.08 sekundi)
 		await get_tree().create_timer(0.08).timeout 
-		
 		muzzle_light.visible = false
