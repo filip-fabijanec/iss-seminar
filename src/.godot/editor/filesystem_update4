@@ -1,7 +1,5 @@
-res://Raketa.tscn
-res://node_3d.gdshader
-res://eksplozija.tscn
-res://eksplozija.gd
 res://RPG_Oruzje.tscn
+res://node_3d.gdshader
 res://raketa.gd
+res://Raketa.tscn
 res://player.gd

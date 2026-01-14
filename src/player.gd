@@ -30,7 +30,11 @@ var is_weapon_empty = false
 
 # --- KONFIGURACIJA PROJEKTILA (RAKETE) ---
 @export var projectile_scene: PackedScene 
-@export var visual_rocket_mesh: Node3D # <--- OBAVEZNO OVO DODIJELI U INSPECTORU!
+@export var visual_rocket_mesh: Node3D
+
+# --- KAMERA PRATI RAKETU ---
+var aktivna_raketa: Node3D = null
+var missile_cam_aktivna = false
 
 # --- REFERENCE ---
 @onready var camera_pivot_node = $vojnik/Rotation
@@ -78,7 +82,6 @@ func _ready():
 	
 	sakrij_originalne_ruke()
 	
-	# Na početku igre raketa mora biti vidljiva na oružju
 	if visual_rocket_mesh:
 		visual_rocket_mesh.visible = true
 	
@@ -87,13 +90,22 @@ func _ready():
 		is_weapon_empty = false
 
 func _input(event):
-	if event is InputEventMouseMotion:
+	# === PREBACIVANJE NA MISSILE CAM (TIPKA G) ===
+	if event.is_action_pressed("toggle_missile_cam"):
+		toggle_missile_camera()
+	
+	# Samo primaj miš input ako NIJE aktivna missile cam
+	if not missile_cam_aktivna and event is InputEventMouseMotion:
 		rotate_y(deg_to_rad(-event.relative.x * MOUSE_SENSITIVITY))
 		x_rotacija += -event.relative.y * MOUSE_SENSITIVITY
 		x_rotacija = clamp(x_rotacija, -80.0, 80.0)
 		spring_arm.rotation_degrees.x = x_rotacija
 
 func _physics_process(delta):
+	# === AKO JE AKTIVNA MISSILE CAM, BLOKIRAJ KRETANJE ===
+	if missile_cam_aktivna:
+		return
+	
 	# 1. GRAVITACIJA
 	if not is_on_floor():
 		velocity.y -= gravity * delta
@@ -201,7 +213,6 @@ func start_reload():
 	
 	var anim_length = rpg_animation_player.get_animation(anim_name_reload).length
 	
-	# Čekamo da animacija završi
 	await get_tree().create_timer(anim_length).timeout
 	
 	is_reloading = false
@@ -233,21 +244,65 @@ func perform_shoot():
 		if rocket.is_class("Node3D"):
 			rocket.set_as_top_level(true)
 		
-		# POZICIJA
 		var muzzle_forward = -spawn_point.global_transform.basis.z
 		rocket.global_position = spawn_point.global_position + (muzzle_forward * 0.5)
 		
-		# ROTACIJA - FIX
 		rocket.global_transform.basis = spawn_point.global_transform.basis
-		# Okrećemo raketu za 180 stupnjeva lokalno
 		rocket.rotate_object_local(Vector3.UP, PI)
+		
+		# === SPREMI REFERENCU NA RAKETU ===
+		aktivna_raketa = rocket
+		
+		# Poveži signal za cleanup
+		if rocket.has_signal("raketa_unistena"):
+			rocket.raketa_unistena.connect(_on_rocket_destroyed)
 		
 	rpg_animation_player.play(anim_name_shoot)
 	rpg_animation_player.queue(anim_name_after_shoot)
-
 
 func trigger_muzzle_flash():
 	if muzzle_light:
 		muzzle_light.visible = true
 		await get_tree().create_timer(0.08).timeout 
 		muzzle_light.visible = false
+
+# ========================================
+# === MISSILE CAMERA FUNKCIJE ===
+# ========================================
+
+func toggle_missile_camera():
+	"""Prebacuje između FPS kamere i kamere na raketi"""
+	
+	if not aktivna_raketa or not is_instance_valid(aktivna_raketa):
+		print("⚠️ Nema aktivne rakete!")
+		return
+	
+	missile_cam_aktivna = not missile_cam_aktivna
+	
+	# Pronađi kameru na raketi (pretpostavljam da se zove "Camera3D")
+	var rocket_camera = aktivna_raketa.find_child("Camera3D", true, false)
+	
+	if not rocket_camera:
+		print("❌ Raketa nema kameru!")
+		missile_cam_aktivna = false
+		return
+	
+	if missile_cam_aktivna:
+		print("📹 MISSILE CAM - Pritisnite G za povratak")
+		camera.current = false
+		rocket_camera.current = true
+	else:
+		print("👤 FPS CAM - Povratak na igrača")
+		rocket_camera.current = false
+		camera.current = true
+
+func _on_rocket_destroyed():
+	"""Callback kad raketa eksplodira"""
+	print("💥 Raketa eksplodirala!")
+	
+	# Vrati kameru na igrača
+	if missile_cam_aktivna:
+		missile_cam_aktivna = false
+		camera.current = true
+		
+	aktivna_raketa = null

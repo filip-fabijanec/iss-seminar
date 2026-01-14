@@ -1,8 +1,8 @@
 extends CharacterBody3D
 
 # Parametri rakete
-@export var rotation_quantum: float = 5.0  # Diskretni skok u stupnjevima
-@export var base_speed: float = 50.0
+@export var rotation_quantum: float = 1.0  # Diskretni skok u stupnjevima
+@export var base_speed: float = 5.0
 @export var max_speed: float = 200.0
 @export var min_speed: float = 10.0
 @export var acceleration: float = 20.0
@@ -45,13 +45,13 @@ func _physics_process(delta):
 
 func handle_input():
 	# Diskretno upravljanje - kvantni skokovi
-	if Input.is_action_just_pressed("missile_pitch_up"):
+	if Input.is_action_pressed("missile_pitch_up"):
 		pitch -= rotation_quantum
-	if Input.is_action_just_pressed("missile_pitch_down"):
+	if Input.is_action_pressed("missile_pitch_down"):
 		pitch += rotation_quantum
-	if Input.is_action_just_pressed("missile_yaw_left"):
+	if Input.is_action_pressed("missile_yaw_left"):
 		yaw += rotation_quantum
-	if Input.is_action_just_pressed("missile_yaw_right"):
+	if Input.is_action_pressed("missile_yaw_right"):
 		yaw -= rotation_quantum
 	
 	# Kontrola brzine

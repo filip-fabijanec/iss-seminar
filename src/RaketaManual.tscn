@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://c2qxfj3k0v8r5"]
 
-[ext_resource type="Script" path="res://raketa_manual.gd" id="1_manual"]
+[ext_resource type="Script" uid="uid://1eyurqfa5nyy" path="res://raketa_manual.gd" id="1_manual"]
 [ext_resource type="PackedScene" uid="uid://dmbu6i8xb3osn" path="res://RPG_Oruzje.tscn" id="2_model"]
 [ext_resource type="PackedScene" uid="uid://b2tki4sw0uapd" path="res://eksplozija.tscn" id="3_explosion"]
 
@@ -50,6 +50,6 @@ target_position = Vector3(0, 0, -10)
 collision_mask = 4294967295
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.17121267, 0.43441677)
 
 [editable path="Sketchfab_Scene"]

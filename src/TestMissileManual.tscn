@@ -1,7 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://d3qxj4k0w9t6s"]
+[gd_scene load_steps=8 format=3 uid="uid://d3qxj4k0xat6s"]
 
 [ext_resource type="PackedScene" uid="uid://c2qxfj3k0v8r5" path="res://RaketaManual.tscn" id="1_missile"]
-[ext_resource type="PackedScene" uid="uid://b8k3j5n7x9m2p" path="res://MissileHUD.tscn" id="2_hud"]
+[ext_resource type="PackedScene" uid="uid://b8k3j5n7yam2p" path="res://MissileHUD.tscn" id="2_hud"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
 
@@ -37,14 +37,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 shape = SubResource("BoxShape3D_1")
 
 [node name="RaketaManual" parent="." instance=ExtResource("1_missile")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.017281055, 9.978596, 4.6342673)
 
 [node name="MissileHUD" parent="." instance=ExtResource("2_hud")]
 
 [node name="Target1" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, -30)
 size = Vector3(5, 10, 2)
-material_override = null
 
 [node name="Target2" type="CSGBox3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 5, -30)
