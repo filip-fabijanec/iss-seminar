@@ -5,7 +5,7 @@ extends Node3D
 @onready var audio = $AudioStreamPlayer3D 
 
 func _ready():
-	print("💥 Eksplozija stvorena na poziciji: ", global_position)
+	print("💥 Eksplozija stvorena na poziciji: ")
 	
 	# 1. POKRENI ČESTICE
 	if particles:
