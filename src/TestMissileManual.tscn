@@ -1,0 +1,74 @@
+[gd_scene load_steps=8 format=3 uid="uid://d3qxj4k0w9t6s"]
+
+[ext_resource type="PackedScene" uid="uid://c2qxfj3k0v8r5" path="res://RaketaManual.tscn" id="1_missile"]
+[ext_resource type="PackedScene" uid="uid://b8k3j5n7x9m2p" path="res://MissileHUD.tscn" id="2_hud"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_1"]
+
+[sub_resource type="Sky" id="Sky_1"]
+sky_material = SubResource("ProceduralSkyMaterial_1")
+
+[sub_resource type="Environment" id="Environment_1"]
+background_mode = 2
+sky = SubResource("Sky_1")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_1"]
+size = Vector2(100, 100)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1"]
+size = Vector3(100, 1, 100)
+
+[node name="TestMissileManual" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_1")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 0, 10, 0)
+shadow_enabled = true
+
+[node name="Ground" type="StaticBody3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Ground"]
+mesh = SubResource("PlaneMesh_1")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+shape = SubResource("BoxShape3D_1")
+
+[node name="RaketaManual" parent="." instance=ExtResource("1_missile")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10, 0)
+
+[node name="MissileHUD" parent="." instance=ExtResource("2_hud")]
+
+[node name="Target1" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, -30)
+size = Vector3(5, 10, 2)
+material_override = null
+
+[node name="Target2" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 5, -30)
+size = Vector3(5, 10, 2)
+
+[node name="Target3" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 5, -30)
+size = Vector3(5, 10, 2)
+
+[node name="Instructions" type="Label" parent="."]
+offset_left = 20.0
+offset_top = 250.0
+offset_right = 500.0
+offset_bottom = 450.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 14
+text = "KONTROLE:
+W - Nos rakete GORE
+S - Nos rakete DOLJE
+A - Skreni LIJEVO
+D - Skreni DESNO
+SPACE - Ubrzaj
+SHIFT - Uspori
+
+Test scene za ručno upravljanu raketu.
+Koristite tipke za upravljanje raketom.
+"
