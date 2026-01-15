@@ -1,4 +1,4 @@
-[gd_scene load_steps=62 format=3 uid="uid://c4ts6mhsivoix"]
+[gd_scene load_steps=56 format=3 uid="uid://c4ts6mhsivoix"]
 
 [ext_resource type="Shader" uid="uid://bflxodyvrnk5r" path="res://node_3d.gdshader" id="1_a202f"]
 [ext_resource type="Texture2D" uid="uid://sn6h5x77ljm4" path="res://grass.jpg" id="2_a0tk4"]
@@ -7,20 +7,14 @@
 [ext_resource type="Script" uid="uid://fkd48g8yish6" path="res://player.gd" id="5_jka67"]
 [ext_resource type="PackedScene" uid="uid://dcc5p4knam4ox" path="res://Protuzracni modeli/Vojnik/army3.fbx" id="6_4arys"]
 [ext_resource type="Script" uid="uid://litbi5k5i32d" path="res://addons/zylann.hterrain/hterrain.gd" id="6_jsk3o"]
-[ext_resource type="AudioStream" uid="uid://4mo80dgte8k0" path="res://Protuzracni modeli/RPG/zvukovi/footstep1.wav" id="6_ype4i"]
 [ext_resource type="Resource" uid="uid://3nl1kp86fna4" path="res://terrain_data/data.hterrain" id="7_4arys"]
 [ext_resource type="Animation" uid="uid://msh57jppwlxr" path="res://Protuzracni modeli/Vojnik/animacije/res/walk_right.res" id="7_6iypd"]
 [ext_resource type="PackedScene" uid="uid://cpji3t0lnwy6j" path="res://Protuzracni modeli/RPG/rpg-7_animations.glb" id="7_ealrb"]
-[ext_resource type="AudioStream" uid="uid://8tor5xeskk4y" path="res://Protuzracni modeli/RPG/zvukovi/footstep2.wav" id="7_riyl1"]
 [ext_resource type="Script" uid="uid://haqoeso6pt0l" path="res://addons/zylann.hterrain/hterrain_texture_set.gd" id="8_6iypd"]
 [ext_resource type="Animation" uid="uid://dphd8qtsqw0y4" path="res://Protuzracni modeli/Vojnik/animacije/res/walk_forward.res" id="8_i0g27"]
 [ext_resource type="Material" uid="uid://0qh63pvl3gr6" path="res://Protuzracni modeli/Vojnik/lambert1.tres" id="8_jsnrv"]
-[ext_resource type="AudioStream" uid="uid://bp26kjoqjfb3r" path="res://Protuzracni modeli/RPG/zvukovi/footstep3.wav" id="8_pb8dk"]
-[ext_resource type="AudioStream" uid="uid://cl20kr1dyb7s5" path="res://Protuzracni modeli/RPG/zvukovi/footstep4.wav" id="9_2mu51"]
 [ext_resource type="Animation" uid="uid://b7jxo4wbnfnec" path="res://Protuzracni modeli/Vojnik/animacije/res/walk_left.res" id="9_ealrb"]
 [ext_resource type="Animation" uid="uid://ceg8qgfr83n40" path="res://Protuzracni modeli/Vojnik/animacije/res/walk_backward.res" id="10_jsnrv"]
-[ext_resource type="AudioStream" uid="uid://dq5aekd4jnfqk" path="res://Protuzracni modeli/RPG/zvukovi/footstep5.wav" id="10_vmvb8"]
-[ext_resource type="AudioStream" uid="uid://d4nu4i2yruxll" path="res://Protuzracni modeli/RPG/zvukovi/footstep6.wav" id="11_4i7mf"]
 [ext_resource type="Animation" uid="uid://ddvjeka4t62kk" path="res://Protuzracni modeli/Vojnik/animacije/res/walk_backward_left.res" id="11_lggff"]
 [ext_resource type="PackedScene" uid="uid://df6dm0nvn8sun" path="res://Raketa.tscn" id="12_riyl1"]
 [ext_resource type="Animation" uid="uid://3kx64rg5dl66" path="res://Protuzracni modeli/Vojnik/animacije/res/walk_backward_right.res" id="12_s0gvp"]
@@ -848,7 +842,6 @@ animation = &"ruke_rpg/rpg_shoot"
 animation = &"ruke_rpg/rpg_reload"
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_4arys"]
-graph_offset = Vector2(-427.52753, 323.20557)
 nodes/output/position = Vector2(580, 200)
 nodes/DonjiDio/node = SubResource("AnimationNodeStateMachine_4arys")
 nodes/DonjiDio/position = Vector2(-140, 200)
@@ -880,9 +873,8 @@ transform = Transform3D(1, 0, 0, 0, 0.39966118, 0.91666293, 0, -0.91666293, 0.39
 light_color = Color(1, 1, 0.7372549, 1)
 
 [node name="Player" type="CharacterBody3D" parent="." node_paths=PackedStringArray("visual_rocket_mesh", "muzzle_light", "rpg_animation_player")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 230.0557, 3.1743164, 273.2131)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 230.0557, 0.16183472, 273.2131)
 script = ExtResource("5_jka67")
-footstep_sounds = Array[AudioStream]([ExtResource("6_ype4i"), ExtResource("7_riyl1"), ExtResource("8_pb8dk"), ExtResource("9_2mu51"), ExtResource("10_vmvb8"), ExtResource("11_4i7mf")])
 projectile_scene = ExtResource("12_riyl1")
 visual_rocket_mesh = NodePath("vojnik/GeneralSkeleton/Leda/RukePivot/Ruke/Sketchfab_model/RPG_7_fbx/Object_2/RootNode/SK_Mannequin_Arms_001/root/Object_11/Skeleton3D/Object_185")
 muzzle_light = NodePath("vojnik/GeneralSkeleton/Leda/RukePivot/Ruke/MuzzlePoint/MuzzleLight")
@@ -895,64 +887,64 @@ shape = SubResource("CapsuleShape3D_wc5p8")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.937737, 0)
 
 [node name="GeneralSkeleton" parent="Player/vojnik" index="0"]
-bones/0/position = Vector3(0.0010181164, 1.007192, -0.004675124)
-bones/0/rotation = Quaternion(-0.11207812, -0.33883435, -0.024775445, 0.93381804)
-bones/1/rotation = Quaternion(0.061269432, -0.0005714914, -3.9570456e-05, 0.99812114)
-bones/2/rotation = Quaternion(0.14297272, -2.0121828e-05, -0.0055701826, 0.9897109)
-bones/3/rotation = Quaternion(0.14335413, -0.00046905156, -0.0055009797, 0.98965615)
-bones/4/rotation = Quaternion(0.0071940557, 0.06508047, 0.0078034904, 0.9978236)
-bones/5/rotation = Quaternion(0.007581865, 0.065458015, 0.0035023896, 0.9978204)
-bones/7/rotation = Quaternion(0.6029802, 0.6650778, 0.31680894, -0.30613506)
-bones/8/rotation = Quaternion(0.22545928, 0.814374, -0.46482724, 0.26438347)
-bones/9/rotation = Quaternion(0.3803901, -0.59861064, 0.3753986, 0.5966948)
-bones/10/rotation = Quaternion(-0.263854, -0.24324329, -0.0786295, 0.9300705)
-bones/11/rotation = Quaternion(-0.1684392, 0.7237934, 0.1452884, 0.65317893)
-bones/12/rotation = Quaternion(-0.02281199, 0.17289163, 0.044671122, 0.9836629)
+bones/0/position = Vector3(0.0002816522, 1.007769, -0.004072273)
+bones/0/rotation = Quaternion(-0.11179824, -0.33926123, -0.024170382, 0.93371236)
+bones/1/rotation = Quaternion(0.05596954, -0.0003396548, 0.0007547236, 0.9984322)
+bones/2/rotation = Quaternion(0.13828903, 4.709021e-05, -0.0051392512, 0.9903786)
+bones/3/rotation = Quaternion(0.14139828, -0.00030315446, -0.0050878283, 0.9899397)
+bones/4/rotation = Quaternion(0.00865251, 0.06515729, 0.007851782, 0.99780667)
+bones/5/rotation = Quaternion(0.008789411, 0.0655346, 0.0035428558, 0.99780536)
+bones/7/rotation = Quaternion(0.604252, 0.66383106, 0.31470034, -0.30849898)
+bones/8/rotation = Quaternion(0.22455785, 0.81431276, -0.47101828, 0.25418577)
+bones/9/rotation = Quaternion(0.37759107, -0.6002705, 0.37275434, 0.59846014)
+bones/10/rotation = Quaternion(-0.26008043, -0.24469042, -0.07841868, 0.93077135)
+bones/11/rotation = Quaternion(-0.16846864, 0.7242778, 0.14527793, 0.6526365)
+bones/12/rotation = Quaternion(-0.022690754, 0.17281702, 0.044614185, 0.9836813)
 bones/12/scale = Vector3(1.0000128, 0.99999917, 0.99998736)
 bones/13/rotation = Quaternion(-0.0834424, -0.024149274, -0.037062336, 0.9955303)
-bones/15/rotation = Quaternion(0.31550553, -0.012391407, -0.031615023, 0.94831604)
-bones/16/rotation = Quaternion(0.49827525, 1.451631e-07, -0.051061615, 0.8655141)
+bones/15/rotation = Quaternion(0.31537873, -0.012374111, -0.031638175, 0.94835764)
+bones/16/rotation = Quaternion(0.49814227, 1.2351256e-07, -0.051047992, 0.86559135)
 bones/17/rotation = Quaternion(0.20919083, -2.5213922e-07, -0.021437129, 0.9776399)
-bones/19/rotation = Quaternion(0.43976715, -0.017747292, -0.044215113, 0.8968472)
-bones/20/rotation = Quaternion(0.536011, -5.2608804e-08, -0.054928757, 0.8424221)
+bones/19/rotation = Quaternion(0.4399378, -0.01775011, -0.044241965, 0.8967622)
+bones/20/rotation = Quaternion(0.53630483, -5.6093086e-08, -0.05495887, 0.8422332)
 bones/21/rotation = Quaternion(0.15573221, -4.4070934e-08, -0.015959017, 0.9876705)
-bones/23/rotation = Quaternion(0.5040798, -0.025807668, -0.04230352, 0.86223423)
+bones/23/rotation = Quaternion(0.5028993, -0.025707606, -0.042239532, 0.8629294)
 bones/24/rotation = Quaternion(0.5859251, -1.1857263e-07, -0.06004364, 0.80813766)
 bones/25/rotation = Quaternion(0.22286873, 0.00012193628, -0.023051435, 0.9745759)
-bones/27/rotation = Quaternion(0.5892747, -0.06954397, 0.0018110777, 0.8049322)
+bones/27/rotation = Quaternion(0.5895394, -0.06953651, 0.0017138694, 0.8047392)
 bones/28/rotation = Quaternion(0.52848303, -1.2560122e-09, -0.054157358, 0.84721464)
-bones/29/rotation = Quaternion(0.12221519, 3.7536665e-08, -0.012524276, 0.99242467)
-bones/31/rotation = Quaternion(0.66077083, -0.6139145, -0.21790564, -0.3728379)
-bones/32/rotation = Quaternion(-0.5497502, 0.66049933, -0.49477684, 0.1292725)
-bones/33/rotation = Quaternion(0.53664166, 0.46171874, -0.5347739, 0.46135503)
-bones/34/rotation = Quaternion(-0.28515908, -0.34474495, 0.06130483, 0.89223146)
-bones/35/rotation = Quaternion(-0.10011577, -0.70663387, -0.2539489, 0.6528058)
-bones/36/rotation = Quaternion(0.12407215, -0.2749957, 0.030656362, 0.9529132)
+bones/29/rotation = Quaternion(0.12201399, 2.9181592e-08, -0.012503661, 0.99244964)
+bones/31/rotation = Quaternion(0.660706, -0.61397153, -0.21796793, -0.3728226)
+bones/32/rotation = Quaternion(-0.547066, 0.66103274, -0.49481466, 0.13752449)
+bones/33/rotation = Quaternion(0.5367504, 0.46167666, -0.53475535, 0.46129215)
+bones/34/rotation = Quaternion(-0.28724825, -0.34133485, 0.06040438, 0.89293355)
+bones/35/rotation = Quaternion(-0.10035588, -0.7065626, -0.25418234, 0.6527552)
+bones/36/rotation = Quaternion(0.12372889, -0.27518028, 0.030510858, 0.95290935)
 bones/36/scale = Vector3(1.0000104, 0.9999992, 0.99999)
-bones/37/rotation = Quaternion(0.40521505, -0.23685126, 0.14098455, 0.87167984)
-bones/39/rotation = Quaternion(0.10877289, 0.006374081, -0.014969197, 0.99393356)
+bones/37/rotation = Quaternion(0.40522274, -0.23686802, 0.14124092, 0.8716302)
+bones/39/rotation = Quaternion(0.10865891, 0.0063696546, -0.015006798, 0.9939454)
 bones/40/rotation = Quaternion(0.2823106, 2.0930077e-07, 0.02299755, 0.95904744)
 bones/41/rotation = Quaternion(0.25681475, -1.4851365e-08, 0.020920744, 0.9662342)
-bones/43/rotation = Quaternion(0.42879203, 0.0001578546, 0.069447316, 0.90073)
+bones/43/rotation = Quaternion(0.42769915, 9.513522e-05, 0.069506444, 0.90124494)
 bones/44/rotation = Quaternion(0.8191673, -3.2301614e-08, 0.066731155, 0.5696594)
 bones/45/rotation = Quaternion(0.16481228, 7.229982e-08, 0.013425979, 0.9862336)
 bones/47/rotation = Quaternion(0.47622815, 0.036576454, 0.006453674, 0.878537)
-bones/48/rotation = Quaternion(0.76251745, 1.3990939e-07, 0.062116344, 0.64397883)
-bones/49/rotation = Quaternion(0.42656228, 1.4268153e-08, 0.03474881, 0.9037905)
+bones/48/rotation = Quaternion(0.7625685, 1.3065073e-07, 0.062120486, 0.64391804)
+bones/49/rotation = Quaternion(0.42666727, 2.233537e-08, 0.034757387, 0.9037405)
 bones/51/rotation = Quaternion(0.53304297, 0.045031387, 0.006248518, 0.84486586)
 bones/52/rotation = Quaternion(0.6583306, 7.822201e-08, 0.05362907, 0.75081617)
 bones/53/rotation = Quaternion(0.49785915, 1.2093005e-07, 0.040556774, 0.8663091)
-bones/55/rotation = Quaternion(0.39092636, 0.088691264, 0.9031921, -0.15347467)
-bones/56/rotation = Quaternion(0.0053563556, 0.98245764, -0.1861904, 0.009026073)
-bones/57/rotation = Quaternion(-0.0064832903, 0.7381323, -0.6742871, 0.021345869)
-bones/58/rotation = Quaternion(4.83839e-05, 1, 5.5637014e-05, 5.522431e-05)
-bones/60/rotation = Quaternion(0.0477568, -0.011028404, 0.9976333, 0.04822512)
-bones/61/rotation = Quaternion(-0.007090634, 0.96384144, -0.26627412, -0.0075787758)
-bones/62/rotation = Quaternion(-0.058443904, 0.5773929, -0.80181307, -0.14247043)
-bones/63/rotation = Quaternion(-3.580193e-05, 0.99999976, -0.00065207336, -0.00013904567)
+bones/55/rotation = Quaternion(0.39190847, 0.0863974, 0.9030346, -0.15320547)
+bones/56/rotation = Quaternion(0.006063378, 0.98344237, -0.18100066, 0.006577356)
+bones/57/rotation = Quaternion(-0.0055949837, 0.7396197, -0.67261297, 0.022876848)
+bones/58/rotation = Quaternion(-5.0721496e-06, 1, -9.985181e-05, 0.00011482781)
+bones/60/rotation = Quaternion(0.04836263, -0.013577778, 0.9975183, 0.049336754)
+bones/61/rotation = Quaternion(-0.00701181, 0.96474653, -0.26291257, -0.009585282)
+bones/62/rotation = Quaternion(-0.05637177, 0.57796264, -0.80183464, -0.14086448)
+bones/63/rotation = Quaternion(-2.8921999e-05, 1, 5.8815785e-05, -3.0712392e-05)
 
 [node name="Neck" type="BoneAttachment3D" parent="Player/vojnik/GeneralSkeleton" index="1"]
-transform = Transform3D(0.83259267, -0.3134157, -0.45668378, 0.08125304, 0.8847009, -0.45902327, 0.54789346, 0.3450725, 0.7620615, -0.010036087, 1.4900699, -0.0065463595)
+transform = Transform3D(0.83324397, -0.30495173, -0.46120387, 0.083233684, 0.8938232, -0.44062713, 0.54660463, 0.32876217, 0.7701551, -0.0075109173, 1.4917669, -0.012121245)
 bone_name = "Neck"
 bone_idx = 4
 
@@ -960,7 +952,7 @@ bone_idx = 4
 transform = Transform3D(0.7645474, -0.29439983, -0.5734065, -0.64201385, -0.42692173, -0.6368333, -0.057315588, 0.85502493, -0.51541066, -0.027801514, 0.056762695, 0.11155701)
 
 [node name="Leda" type="BoneAttachment3D" parent="Player/vojnik/GeneralSkeleton" index="2"]
-transform = Transform3D(0.7684237, 0.044592567, -0.63838583, 0.029792054, 0.99399483, 0.10529322, 0.6392475, -0.09992862, 0.76248074, 0.019910304, 1.1018416, -0.03183833)
+transform = Transform3D(0.7683328, 0.04884529, -0.638184, 0.032323573, 0.99285036, 0.114906244, 0.6392338, -0.10891465, 0.7612606, 0.019060636, 1.102447, -0.031214988)
 bone_name = "Spine"
 bone_idx = 1
 
@@ -1090,6 +1082,7 @@ stream = ExtResource("23_obt1j")
 
 [node name="HTerrain" type="Node3D" parent="."]
 script = ExtResource("6_jsk3o")
+map_scale = Vector3(10, 10, 10)
 _terrain_data = ExtResource("7_4arys")
 chunk_size = 32
 collision_enabled = true

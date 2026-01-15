@@ -1,5 +1,8 @@
-res://RPG_Oruzje.tscn
+res://Raketa.tscn
 res://node_3d.gdshader
 res://raketa.gd
-res://Raketa.tscn
+res://RPG_Oruzje.tscn
 res://player.gd
+res://node_3d.tscn
+res://terrain_data/height.res
+res://terrain_data/data.hterrain

@@ -26,7 +26,7 @@ var x_rotacija = 0.0
 
 # --- LOGIKA ORUŽJA ---
 var is_reloading = false
-var is_weapon_empty = false 
+var is_weapon_empty = false
 
 # --- KONFIGURACIJA PROJEKTILA (RAKETE) ---
 @export var projectile_scene: PackedScene 
@@ -85,9 +85,12 @@ func _ready():
 	if visual_rocket_mesh:
 		visual_rocket_mesh.visible = true
 	
+	# === ISPRAVAK: Pokreni s natovarenom raketom ===
+	is_weapon_empty = false  # FALSE = ima raketu
+	is_reloading = false
+	
 	if rpg_animation_player:
 		rpg_animation_player.play(anim_name_idle)
-		is_weapon_empty = false
 
 func _input(event):
 	# === PREBACIVANJE NA MISSILE CAM (TIPKA G) ===
@@ -203,11 +206,21 @@ func handle_weapon_input():
 
 func start_reload():
 	if not rpg_animation_player: return
-	if not is_weapon_empty: return 
+	
+	# === ISPRAVAK: Može se reloadati samo ako je PRAZNO ===
+	if not is_weapon_empty:
+		print("⚠️ RPG već ima raketu!")
+		return
+	
+	if is_reloading:
+		print("⚠️ Već reloadaš!")
+		return
 
 	is_reloading = true
+	
 	if visual_rocket_mesh:
 		visual_rocket_mesh.visible = true
+	
 	audio_reload.play()
 	rpg_animation_player.play(anim_name_reload)
 	
@@ -216,17 +229,23 @@ func start_reload():
 	await get_tree().create_timer(anim_length).timeout
 	
 	is_reloading = false
-	is_weapon_empty = false 
+	is_weapon_empty = false  # Sada IMA raketu
 	
 	rpg_animation_player.play(anim_name_idle)
+	print("✅ RPG natovareno!")
 
 func perform_shoot():
 	if not rpg_animation_player: return
 	
 	if rpg_animation_player.current_animation == anim_name_shoot:
-		return 
+		return
+	
+	# === ISPRAVAK: Ne može pucati ako je prazno ===
+	if is_weapon_empty:
+		print("⚠️ RPG je prazno! Pritisni R za reload")
+		return
 
-	is_weapon_empty = true 
+	is_weapon_empty = true  # Sada je PRAZNO
 	
 	if visual_rocket_mesh:
 		visual_rocket_mesh.visible = false
@@ -244,21 +263,26 @@ func perform_shoot():
 		if rocket.is_class("Node3D"):
 			rocket.set_as_top_level(true)
 		
-		var muzzle_forward = -spawn_point.global_transform.basis.z
-		rocket.global_position = spawn_point.global_position + (muzzle_forward * 0.5)
+		rocket.global_position = spawn_point.global_position
 		
-		rocket.global_transform.basis = spawn_point.global_transform.basis
-		rocket.rotate_object_local(Vector3.UP, PI)
+		var camera_forward = -camera.global_transform.basis.z
+		rocket.look_at(rocket.global_position + camera_forward, Vector3.UP)
 		
-		# === SPREMI REFERENCU NA RAKETU ===
+		if rocket.has_method("postavi_pocetnu_brzinu"):
+			rocket.postavi_pocetnu_brzinu(camera_forward)
+		
+		print("📍 Spawn pozicija: ", spawn_point.global_position)
+		print("🎯 Smjer kamere: ", camera_forward)
+		
 		aktivna_raketa = rocket
 		
-		# Poveži signal za cleanup
 		if rocket.has_signal("raketa_unistena"):
 			rocket.raketa_unistena.connect(_on_rocket_destroyed)
 		
 	rpg_animation_player.play(anim_name_shoot)
 	rpg_animation_player.queue(anim_name_after_shoot)
+	
+	print("🚀 Raketa ispaljena! Pritisni R za reload")
 
 func trigger_muzzle_flash():
 	if muzzle_light:
