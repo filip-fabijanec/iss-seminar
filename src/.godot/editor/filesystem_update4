@@ -1,8 +1,7 @@
-res://Raketa.tscn
+res://Explosion.tscn
 res://node_3d.gdshader
-res://raketa.gd
-res://RPG_Oruzje.tscn
-res://player.gd
+res://explosion.gd
+res://bullet.gd
+res://Bullet.tscn
 res://node_3d.tscn
-res://terrain_data/height.res
-res://terrain_data/data.hterrain
+res://airplane.gd

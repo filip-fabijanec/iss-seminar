@@ -1,0 +1,17 @@
+# Godot editor files
+*.import
+*.cfg
+*.md5
+*.tscn-editstate-*
+*.tscn-folding-*
+*.scn-folding-*
+*.res-folding-*
+*.mesh-folding-*
+*.mp3str-*
+*.vulkan.cache
+/.godot/editor/
+.godot/shader_cache/
+.godot/scene_groups_cache.cfg
+.godot/global_script_class_cache.cfg
+.godot/uid_cache.bin
+.godot/editor_layout.cfg
