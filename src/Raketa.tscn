@@ -39,7 +39,7 @@ visible = false
 visible = false
 
 [node name="RayCast3D" type="RayCast3D" parent="."]
-transform = Transform3D(40, 0, 0, 0, -1.3113416e-07, -40, 0, 3, -1.7484556e-06, 0, 0.009, 1.2167732)
+transform = Transform3D(100, 0, 0, 0, -1.7484555e-07, -100, 0, 4, -4.371139e-06, 0, 0.009, 1.5257695)
 collide_with_areas = true
 
 [node name="CameraMarker" type="Marker3D" parent="."]

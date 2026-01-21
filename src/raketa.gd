@@ -5,7 +5,7 @@ signal raketa_unistena
 # PARAMETRI SIMULACIJE
 @export var masa := 20.0             
 @export var potisak_sila := 5000.0   # Jacina motora (Newton)
-@export var lift_koeficijent := 10.0 # Faktor uzgona - utjece na to koliko jako raketa skrece
+@export var lift_koeficijent := 10.0 # Faktor uzgona 
 @export var otpor_koeficijent := 0.01
 @export var max_brzina := 300.0      
 
@@ -15,6 +15,7 @@ signal raketa_unistena
 # OSTALO
 @export var homing_strength := 5.0   # Koliko agresivno prati metu
 @export var explosion_scene: PackedScene
+@export var proximity_radius := 15.0 # Povećao sam malo radijus radi sigurnosti
 
 const GRAVITACIJA := Vector3(0, -9.81, 0)
 const MAX_DOLET := 5000.0             
@@ -29,7 +30,6 @@ var prijedjena_udaljenost := 0.0
 
 # INICIJALIZACIJA
 func _ready():
-	# Marker za kameru - postavljam ga malo iza i iznad rakete
 	var cam_marker := Marker3D.new()
 	cam_marker.name = "CameraMarker"
 	add_child(cam_marker)
@@ -38,9 +38,8 @@ func _ready():
 
 func postavi_pocetnu_brzinu(smjer: Vector3):
 	smjer = smjer.normalized()
-	velocity = smjer * 80.0 # Pocetni impuls
+	velocity = smjer * 80.0 
 
-	# Podesavanje orijentacije da nos gleda u smjeru ispaljivanja
 	if smjer.is_equal_approx(Vector3.UP):
 		global_transform.basis = Basis.looking_at(smjer, Vector3.RIGHT)
 	else:
@@ -59,112 +58,126 @@ func ignoriraj_strijelca(strijelac: Node):
 # PHYSICS PROCESS (Glavna petlja)
 func _physics_process(delta):
 	
-	# 1. UPRAVLJANJE ORIJENTACIJOM (ATTITUDE)
-	# Ovdje mijenjamo kuteve rotacije direktno (bez momenta), kako je trazeno u zadatku
-	if tip_rakete == 1: # Manualno
+	# 1. UPRAVLJANJE ORIJENTACIJOM
+	if tip_rakete == 1: 
 		simple_arcade_controls(delta)
 	elif tip_rakete == 2 and is_instance_valid(locked_target): 
 		homing_attitude_control(delta)
-	elif tip_rakete == 0: # Direct (balisticki)
+	elif tip_rakete == 0: 
 		stabilize_to_velocity(delta)
 
-	# 2. IZRAČUN SILA (Dinamika)
-	# F_total = Thrust + Lift + Drag + Gravity
+	# 2. IZRAČUN SILA
 	var F_thrust = calculate_thrust()
-	var F_lift = calculate_lift() # Ovo generira aerodinamicku silu za skretanje
+	var F_lift = calculate_lift() 
 	var F_drag = calculate_drag()
 	var F_grav = GRAVITACIJA * masa
 
 	var F_total = F_thrust + F_lift + F_drag + F_grav
 
-	# 3. INTEGRACIJA (Eulerova metoda)
-	# a = F / m
-	# v = v + a * dt
+	# 3. INTEGRACIJA
 	var acceleration = F_total / masa
 	velocity += acceleration * delta
 
-	# Ogranicenje maksimalne brzine
 	if velocity.length() > max_brzina:
 		velocity = velocity.normalized() * max_brzina
 
-	# x = x + v * dt
-	global_position += velocity * delta
-	prijedjena_udaljenost += velocity.length() * delta
+	# --- OVDJE JE POPRAVLJENA LOGIKA KRETANJA I SUDARA ---
 	
-	# Vizualna korekcija - model prati vektor brzine da ljepse izgleda (samo Direct mod)
-	if tip_rakete == 0 and velocity.length() > 1.0:
-		visual_align(delta)
-
-	# 4. PROVJERA SUDARA I DOLETA
+	# A) Izračunaj korak (gdje bi bili na kraju ovog framea)
+	var step = velocity * delta
+	var step_len = step.length()
+	var current_pos = global_position
+	var next_pos = current_pos + step
+	
+	# B) PROVJERA DOLETA
 	if prijedjena_udaljenost > MAX_DOLET:
 		detonate(global_position)
 		return
-	provjeri_sudar()
 
-# KONTROLE (YAW / PITCH)
-func simple_arcade_controls(delta):
-	# W/S = Pitch (Gore/Dolje), A/D = Yaw (Lijevo/Desno)
-	var pitch_input = Input.get_axis("missile_pitch_up", "missile_pitch_down") 
-	var yaw_input = Input.get_axis("missile_yaw_right", "missile_yaw_left")   
+	# C) PROVJERA BLIZINE (PROXIMITY) - Prije micanja!
+	# Provjeravamo liniju od trenutne do iduće pozicije
+	if provjeri_proximity(current_pos, next_pos):
+		return # Ako je eksplodirala, prekidamo
+
+	# D) PROVJERA SUDARA (RAYCAST) - Prije micanja!
+	# Postavljamo raycast da gleda točno onoliko koliko putujemo naprijed (-Z)
+	#ray.target_position = Vector3(0, 0, -step_len)
+	ray.force_raycast_update()
 	
-	# Rotacija oko X osi (Pitch)
+	if ray.is_colliding():
+		provjeri_sudar()
+		return # Ako je udarila, prekidamo
+
+	# E) MICANJE RAKETE (Samo ako nismo ništa pogodili)
+	global_position = next_pos
+	prijedjena_udaljenost += step_len
+	
+	# Vizualna korekcija
+	if tip_rakete == 0 and velocity.length() > 1.0:
+		visual_align(delta)
+
+
+# KONTROLE
+func simple_arcade_controls(delta):
+	var pitch_input = Input.get_axis("missile_pitch_up", "missile_pitch_down") 
+	var yaw_input = Input.get_axis("missile_yaw_right", "missile_yaw_left")    
+	
 	if abs(pitch_input) > 0.01:
 		global_transform.basis = global_transform.basis.rotated(global_transform.basis.x, pitch_input * deg_to_rad(turn_speed) * delta)
 		
-	# Rotacija oko Y osi (Yaw)
 	if abs(yaw_input) > 0.01:
 		global_transform.basis = global_transform.basis.rotated(global_transform.basis.y, yaw_input * deg_to_rad(turn_speed) * delta)
 	
-	# Obavezna ortonormalizacija da se matrica ne deformira s vremenom
 	global_transform.basis = global_transform.basis.orthonormalized()
 
 # HOMING LOGIKA
 func homing_attitude_control(delta):
-	var target_dir = (locked_target.global_position - global_position).normalized()
+	var target_velocity = Vector3.ZERO
+	if "velocity" in locked_target:
+		target_velocity = locked_target.velocity
+	elif locked_target is RigidBody3D:
+		target_velocity = locked_target.linear_velocity
+
+	var to_target = locked_target.global_position - global_position
+	var distance = to_target.length()
 	
-	# Koristim looking_at za izracun ciljane rotacije
+	var prediction_speed = max_brzina 
+	var time_to_impact = distance / prediction_speed
+	
+	# Vratio sam clamp jer je bitan da raketa ne poludi na velikim udaljenostima
+	# time_to_impact = clamp(time_to_impact, 0.0, 1.0) 
+	
+	var predicted_pos = locked_target.global_position + (target_velocity * time_to_impact)
+	var target_dir = (predicted_pos - global_position).normalized()
+	
 	var current_basis = global_transform.basis
 	var target_basis = Basis.looking_at(target_dir, Vector3.UP)
-	
-	# Glatka interpolacija (slerp) prema meti
-	global_transform.basis = current_basis.slerp(target_basis, homing_strength * delta).orthonormalized()
+	global_transform.basis = current_basis.slerp(target_basis, homing_strength * 2.0 * delta).orthonormalized()
 
-# FIZIKA - IZRAČUN SILA
+# FIZIKA - SILA
 func calculate_thrust() -> Vector3:
-	# Potisak uvijek djeluje u smjeru nosa (-Z)
 	return -global_transform.basis.z * potisak_sila
 
 func calculate_lift() -> Vector3:
-	# Racunanje sile uzgona ovisno o kutu napada (Angle of Attack - AoA)
-	# Ova sila omogucuje skretanje kad okrenemo nos rakete
-	
 	if velocity.length() < 1.0: return Vector3.ZERO
 	
 	var v_dir = velocity.normalized()
 	var nos = -global_transform.basis.z
 	
-	# Kut izmedju vektora brzine i nosa
 	var aoa = v_dir.angle_to(nos)
 	if aoa < 0.001: return Vector3.ZERO
 	
-	# Os rotacije (vektor okomit na ravninu koju cine brzina i nos)
 	var axis = v_dir.cross(nos).normalized()
-	
-	# Smjer sile uzgona (okomito na brzinu, rotirano za 90 stupnjeva oko osi)
 	var lift_dir = v_dir.rotated(axis, PI / 2.0)
-	
-	# Intenzitet sile: proporcionalan kvadratu brzine i sinusu kuta napada
 	var dynamic_pressure = 0.5 * velocity.length_squared() * 0.01 
 	
 	return lift_dir * lift_koeficijent * sin(aoa) * dynamic_pressure
 
 func calculate_drag() -> Vector3:
-	# Otpor zraka suprotan smjeru brzine
 	return -velocity.normalized() * otpor_koeficijent * velocity.length_squared()
 
 # POMOĆNE FUNKCIJE
 func stabilize_to_velocity(delta):
-	# U direct modu raketa se ponasa kao strijela (nos prati putanju)
 	if velocity.length() > 1.0:
 		var target_basis = Basis.looking_at(velocity.normalized(), Vector3.UP)
 		global_transform.basis = global_transform.basis.slerp(target_basis, delta * 5.0)
@@ -174,11 +187,39 @@ func visual_align(delta):
 	global_transform.basis = global_transform.basis.slerp(target_basis, delta * 2.0)
 
 func provjeri_sudar():
-	if ray.is_colliding():
-		var hit = ray.get_collider()
-		# Ignoriramo igraca da se ne sudarimo sami sa sobom pri ispaljivanju
-		if not hit.is_in_group("player"):
-			detonate(ray.get_collision_point())
+	# Ova se funkcija zove samo ako je ray.is_colliding() true
+	var hit = ray.get_collider()
+	
+	if not hit.is_in_group("player"):
+		print("💥 POGODAK (Direct)! Raketa je udarila u: ", hit.name)
+		print("Tip objekta: ", hit.get_class())
+		
+		# Dodao sam i ovdje provjeru štete
+		if hit.has_method("take_damage"):
+			hit.take_damage(100) # Direktan pogodak radi više štete
+			
+		detonate(ray.get_collision_point())
+			
+func provjeri_proximity(start_pos: Vector3, end_pos: Vector3) -> bool:
+	if not is_instance_valid(locked_target):
+		return false
+		
+	var target_pos = locked_target.global_position
+	
+	# Matematika: točka na liniji kretanja najbliža meti
+	var closest_point = Geometry3D.get_closest_point_to_segment(target_pos, start_pos, end_pos)
+	var dist = closest_point.distance_to(target_pos)
+	
+	if dist < proximity_radius:
+		print("💥 PROXIMITY AKTIVIRAN! Meta: ", locked_target.name, " | Udaljenost: ", dist)
+		
+		if locked_target.has_method("take_damage"):
+			locked_target.take_damage(50) # Proximity radi manje štete
+			
+		detonate(closest_point)
+		return true 
+		
+	return false
 
 func detonate(point):
 	emit_signal("raketa_unistena")
