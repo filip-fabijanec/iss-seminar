@@ -3,6 +3,9 @@ extends Node3D
 @onready var particles = $GPUParticles3D
 # Pretpostavljam da se čvor zove AudioStreamPlayer3D
 @onready var audio = $AudioStreamPlayer3D 
+@onready var debris = $Debris
+@onready var smoke = $Smoke
+@onready var fire = $Fire
 
 func _ready():
 	print("💥 Eksplozija stvorena na poziciji: ")
@@ -11,6 +14,9 @@ func _ready():
 	if particles:
 		particles.one_shot = true
 		particles.emitting = true
+		debris.emitting = true
+		smoke.emitting = true	
+		fire.emitting = true
 	
 	# 2. POKRENI ZVUK
 	if audio:

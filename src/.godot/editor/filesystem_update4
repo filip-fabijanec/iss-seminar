@@ -1,8 +1,6 @@
-res://RaketaManual.tscn
-res://node_3d.gdshader
-res://player.gd
-res://Raketa.tscn
-res://raketa.gd
 res://node_3d.tscn
-res://Protuzracni modeli/Vojnik/animacije/res/walk_left.res
-res://eksplozija.tscn
+res://node_3d.gdshader
+res://raketa.gd
+res://Raketa.tscn
+res://airplane.gd
+res://player.gd

@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://cgyy4sjv7l8g4"]
 
 [ext_resource type="Script" uid="uid://c842pb4ovhvt" path="res://bullet.gd" id="1_ayd6b"]
-[ext_resource type="AudioStream" uid="uid://bdugjpfqo1o33" path="res://zvukovi_rafale/gun.mp3" id="2_4s4u5"]
+[ext_resource type="AudioStream" uid="uid://dwkbc8swvi3lf" path="res://zvukovi_rafale/gun.mp3" id="2_4s4u5"]
 [ext_resource type="PackedScene" uid="uid://rtonf07loj4w" path="res://Explosion.tscn" id="2_7281b"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_x3e43"]

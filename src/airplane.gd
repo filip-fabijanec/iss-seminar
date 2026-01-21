@@ -5,7 +5,7 @@ extends RigidBody3D
 @onready var gun_muzzle: Node3D = $Gun
 @export var bullet_scene: PackedScene
 
-var throttle := 0.0
+var throttle := 0.8
 const MASS := 1200.0
 const MAX_THRUST := 50000.0
 const THROTTLE_RATE := 0.6
