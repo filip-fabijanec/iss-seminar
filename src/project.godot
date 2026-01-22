@@ -11,9 +11,13 @@ config_version=5
 [application]
 
 config/name="ISS seminar"
-run/main_scene="uid://c4ts6mhsivoix"
+run/main_scene="uid://b8r4q31eceq1h"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+GameData="*res://GameData.gd"
 
 [editor_plugins]
 

@@ -1,3 +1,9 @@
-res://Raketa.tscn
+res://MainScene.tscn
 res://node_3d.gdshader
+res://glavni_ui.gd
+res://WinnerScene.tscn
+res://WinnerScene.gd
 res://raketa.gd
+res://eksplozija.tscn
+res://bullet.gd
+res://node_3d.tscn

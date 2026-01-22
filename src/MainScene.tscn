@@ -1,0 +1,65 @@
+[gd_scene load_steps=2 format=3 uid="uid://b8r4q31eceq1h"]
+
+[ext_resource type="Script" uid="uid://v5rbnxd3cyed" path="res://glavni_ui.gd" id="1_3mqji"]
+
+[node name="MainScene" type="CanvasLayer"]
+
+[node name="GlavniUI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_3mqji")
+
+[node name="ColorRect" type="ColorRect" parent="GlavniUI"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.6062439, 0.5189095, 5.7756904e-07, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GlavniUI"]
+layout_mode = 0
+offset_left = 446.0
+offset_top = 95.5
+offset_right = 706.0
+offset_bottom = 552.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="Label2" type="Label" parent="GlavniUI/VBoxContainer"]
+layout_mode = 2
+text = "Simulacija vojnika, aviona i njihove borbe"
+
+[node name="BtnStart" type="Button" parent="GlavniUI/VBoxContainer"]
+layout_mode = 2
+text = "Pokreni"
+
+[node name="BtnQuit" type="Button" parent="GlavniUI/VBoxContainer"]
+layout_mode = 2
+text = "Izađi
+"
+
+[node name="Label" type="Label" parent="GlavniUI/VBoxContainer"]
+layout_mode = 2
+text = "Vojnik kontrole:
+Kretanje: WASD
+Pucanje: Left Click
+Ciljanje: Right Click
+Mijenjanje modova rakete: E
+Uključivanje praćenja aviona: Q
+Kontroliranje rakete TFGH
+Prebacivanje kamere na raketu: X
+
+Avion kontrole:
+Kontroliranje (Pitch/Roll): Strelice
+Kontroliranje (Yaw): OP
+Pucanje: L
+Ubrzavanje: Shift
+Usporavanje: Control"

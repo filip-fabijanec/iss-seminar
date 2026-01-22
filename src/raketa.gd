@@ -1,6 +1,9 @@
 extends Area3D
 
+# --- SIGNALI ZA GAME OVER ---
 signal raketa_unistena
+signal smrtonosni_pogodak(napadac: String, zrtva: String)
+# ----------------------------
 
 # PARAMETRI SIMULACIJE
 @export var masa := 20.0             
@@ -15,7 +18,7 @@ signal raketa_unistena
 # OSTALO
 @export var homing_strength := 5.0   # Koliko agresivno prati metu
 @export var explosion_scene: PackedScene
-@export var proximity_radius := 15.0 # Povećao sam malo radijus radi sigurnosti
+@export var proximity_radius := 15.0 
 
 const GRAVITACIJA := Vector3(0, -9.81, 0)
 const MAX_DOLET := 5000.0             
@@ -25,11 +28,13 @@ var velocity: Vector3 = Vector3.ZERO
 var tip_rakete := 0                  # 0=Direct, 1=Manual, 2=Homing
 var locked_target: Node3D = null
 var prijedjena_udaljenost := 0.0
+var vlasnik_strijelac: Node = null   # Dodano radi kompatibilnosti
 
 @onready var ray: RayCast3D = $RayCast3D
 
 # INICIJALIZACIJA
 func _ready():
+	# Kreiranje markera za kameru ako je potrebno
 	var cam_marker := Marker3D.new()
 	cam_marker.name = "CameraMarker"
 	add_child(cam_marker)
@@ -54,6 +59,7 @@ func postavi_raketu(tip: int, meta: Node3D = null):
 
 func ignoriraj_strijelca(strijelac: Node):
 	if ray: ray.add_exception(strijelac)
+	vlasnik_strijelac = strijelac
 
 # PHYSICS PROCESS (Glavna petlja)
 func _physics_process(delta):
@@ -81,9 +87,7 @@ func _physics_process(delta):
 	if velocity.length() > max_brzina:
 		velocity = velocity.normalized() * max_brzina
 
-	# --- OVDJE JE POPRAVLJENA LOGIKA KRETANJA I SUDARA ---
-	
-	# A) Izračunaj korak (gdje bi bili na kraju ovog framea)
+	# --- KRETANJE I SUDARI ---
 	var step = velocity * delta
 	var step_len = step.length()
 	var current_pos = global_position
@@ -94,28 +98,24 @@ func _physics_process(delta):
 		detonate(global_position)
 		return
 
-	# C) PROVJERA BLIZINE (PROXIMITY) - Prije micanja!
-	# Provjeravamo liniju od trenutne do iduće pozicije
+	# C) PROVJERA BLIZINE (PROXIMITY)
 	if provjeri_proximity(current_pos, next_pos):
-		return # Ako je eksplodirala, prekidamo
+		return 
 
-	# D) PROVJERA SUDARA (RAYCAST) - Prije micanja!
-	# Postavljamo raycast da gleda točno onoliko koliko putujemo naprijed (-Z)
-	#ray.target_position = Vector3(0, 0, -step_len)
+	# D) PROVJERA SUDARA (RAYCAST)
 	ray.force_raycast_update()
 	
 	if ray.is_colliding():
 		provjeri_sudar()
-		return # Ako je udarila, prekidamo
+		return 
 
-	# E) MICANJE RAKETE (Samo ako nismo ništa pogodili)
+	# E) MICANJE RAKETE
 	global_position = next_pos
 	prijedjena_udaljenost += step_len
 	
 	# Vizualna korekcija
 	if tip_rakete == 0 and velocity.length() > 1.0:
 		visual_align(delta)
-
 
 # KONTROLE
 func simple_arcade_controls(delta):
@@ -124,10 +124,8 @@ func simple_arcade_controls(delta):
 	
 	if abs(pitch_input) > 0.01:
 		global_transform.basis = global_transform.basis.rotated(global_transform.basis.x, pitch_input * deg_to_rad(turn_speed) * delta)
-		
 	if abs(yaw_input) > 0.01:
 		global_transform.basis = global_transform.basis.rotated(global_transform.basis.y, yaw_input * deg_to_rad(turn_speed) * delta)
-	
 	global_transform.basis = global_transform.basis.orthonormalized()
 
 # HOMING LOGIKA
@@ -140,12 +138,8 @@ func homing_attitude_control(delta):
 
 	var to_target = locked_target.global_position - global_position
 	var distance = to_target.length()
-	
 	var prediction_speed = max_brzina 
 	var time_to_impact = distance / prediction_speed
-	
-	# Vratio sam clamp jer je bitan da raketa ne poludi na velikim udaljenostima
-	# time_to_impact = clamp(time_to_impact, 0.0, 1.0) 
 	
 	var predicted_pos = locked_target.global_position + (target_velocity * time_to_impact)
 	var target_dir = (predicted_pos - global_position).normalized()
@@ -160,17 +154,13 @@ func calculate_thrust() -> Vector3:
 
 func calculate_lift() -> Vector3:
 	if velocity.length() < 1.0: return Vector3.ZERO
-	
 	var v_dir = velocity.normalized()
 	var nos = -global_transform.basis.z
-	
 	var aoa = v_dir.angle_to(nos)
 	if aoa < 0.001: return Vector3.ZERO
-	
 	var axis = v_dir.cross(nos).normalized()
 	var lift_dir = v_dir.rotated(axis, PI / 2.0)
 	var dynamic_pressure = 0.5 * velocity.length_squared() * 0.01 
-	
 	return lift_dir * lift_koeficijent * sin(aoa) * dynamic_pressure
 
 func calculate_drag() -> Vector3:
@@ -186,41 +176,71 @@ func visual_align(delta):
 	var target_basis = Basis.looking_at(velocity.normalized(), Vector3.UP)
 	global_transform.basis = global_transform.basis.slerp(target_basis, delta * 2.0)
 
+# --- U Projectile.gd ---
+
+# Zamijeni cijelu funkciju aktiviraj_game_over u Projectile.gd ovim:
+# --- POPRAVLJENE FUNKCIJE ---
+
+func aktiviraj_game_over(ime_mete, tacka_eksplozije: Vector3):
+	print("🏆 POGODAK! Pripremam pobjedu...")
+	
+	# 1. ZAUSTAVI RAKETU (Vizualno i fizički)
+	set_physics_process(false) # Prestani pomicati raketu
+	hide() # Sakrij model rakete
+	# Isključi sudare da ne pogodi istu metu 100 puta dok čeka
+	ray.enabled = false 
+	monitoring = false 
+
+	# 2. STVORI EKSPLOZIJU ODMAH (da igrač vidi udarac)
+	if explosion_scene:
+		var e = explosion_scene.instantiate()
+		get_tree().root.add_child(e)
+		e.global_position = tacka_eksplozije
+
+	# 3. ZAPIŠI PODATKE
+	var gd = get_node_or_null("/root/GameData")
+	if gd:
+		gd.pobjednik_ime = "VOJNIK"
+		print("✅ GameData ažuriran")
+
+	await get_tree().create_timer(0.5).timeout
+	
+	# 5. PROMIJENI SCENU
+	get_tree().change_scene_to_file("res://WinnerScene.tscn")
+	
+	# 6. TEK SAD UNIŠTI RAKETU
+	queue_free()
+
 func provjeri_sudar():
-	# Ova se funkcija zove samo ako je ray.is_colliding() true
 	var hit = ray.get_collider()
+	if not hit: return
 	
-	if not hit.is_in_group("player"):
-		print("💥 POGODAK (Direct)! Raketa je udarila u: ", hit.name)
-		print("Tip objekta: ", hit.get_class())
+	# 1. PROVJERA: Je li to avion? (Pobjeda)
+	if hit.is_in_group("airplane"): 
+		print("🎯 DIREKTAN POGODAK U AVION!")
+		var point = ray.get_collision_point()
+		aktiviraj_game_over("VOJNIK", point) # Pokreće timer i WinnerScene
 		
-		# Dodao sam i ovdje provjeru štete
-		if hit.has_method("take_damage"):
-			hit.take_damage(100) # Direktan pogodak radi više štete
-			
-		detonate(ray.get_collision_point())
-			
+	# 2. PROVJERA: Je li to tlo ili nešto drugo? (Samo eksplozija)
+	else:
+		print("🌍 Raketa je udarila u tlo/objekt: ", hit.name)
+		detonate(ray.get_collision_point()) # Samo eksplozija, nema WinnerScene
+
 func provjeri_proximity(start_pos: Vector3, end_pos: Vector3) -> bool:
-	if not is_instance_valid(locked_target):
-		return false
-		
-	var target_pos = locked_target.global_position
+	if not is_instance_valid(locked_target): return false
 	
-	# Matematika: točka na liniji kretanja najbliža meti
+	var target_pos = locked_target.global_position
 	var closest_point = Geometry3D.get_closest_point_to_segment(target_pos, start_pos, end_pos)
 	var dist = closest_point.distance_to(target_pos)
 	
 	if dist < proximity_radius:
-		print("💥 PROXIMITY AKTIVIRAN! Meta: ", locked_target.name, " | Udaljenost: ", dist)
+		print("💥 PROXIMITY POGODAK: ", locked_target.name)
 		
-		if locked_target.has_method("take_damage"):
-			locked_target.take_damage(50) # Proximity radi manje štete
-			
-		detonate(closest_point)
+		aktiviraj_game_over(locked_target.name, closest_point)
 		return true 
-		
 	return false
 
+# Ovu funkciju sada koristimo samo ako raketa promaši (npr. MAX_DOLET)
 func detonate(point):
 	emit_signal("raketa_unistena")
 	if explosion_scene:
