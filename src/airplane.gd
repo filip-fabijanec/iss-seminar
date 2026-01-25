@@ -23,9 +23,9 @@ const GRAVITY := Vector3(0, -9.81, 0)
 func _ready():
 	mass = MASS
 	gravity_scale = 0.0
-	global_position.y = 100.0
-	global_position.x = 400
-	global_position.z = 400
+	#global_position.y = 100.0
+	#global_position.x = 400
+	#global_position.z = 400
 
 	var initial_speed := 200.0 / 3.6  
 	var forward := -global_transform.basis.z
